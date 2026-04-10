@@ -45,7 +45,7 @@ The system allows staff to create files, generate QR codes, scan them during tra
 * Priority order for urgent files
 * Email notifications for file transfers
 * Automated file approval workflows
-* Deployment to cloud servers
+* Deployed to cloud servers
 * Mobile-friendly interface
 
 ---
