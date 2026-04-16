@@ -32,32 +32,49 @@
   <!-- Left: grouped parts display -->
   <div style="display:flex;flex-direction:column;gap:20px">
 
-    {% set part_types = ['Invoice', 'Bill', 'Receipt', 'Other'] %}
+    {# icon map for all known part types #}
+    {% set icons = {
+      'Invoice': '🧾', 'Bill': '📄', 'Receipt': '🏷️',
+      'Budget Estimate': '💰', 'Payment Voucher': '💳', 'Purchase Order': '🛒',
+      'Audit Report': '🔍', 'Sanction Letter': '✅',
+      'Project Proposal': '📋', 'Lab Report': '🔬', 'Research Paper': '📑',
+      'Assignment': '📝', 'Examination Paper': '📃', 'Grade Sheet': '🎓',
+      'Course Outline': '📚', 'Approval Letter': '✉️', 'NOC': '🔏',
+      'Book Request': '📖', 'Acquisition List': '📋', 'Due Notice': '⏰',
+      'Membership Form': '🪪', 'Inventory Record': '🗄️', 'Subscription Invoice': '🧾',
+      'Allotment Letter': '🏠', 'Room Change Request': '🔄', 'Mess Bill': '🍽️',
+      'Complaint Form': '📢', 'Maintenance Request': '🔧', 'Fee Receipt': '💵',
+      'Disciplinary Notice': '⚠️',
+      'Application Form': '📝', 'Scholarship Letter': '🎓', 'Bonafide Certificate': '📜',
+      'Grievance Form': '📢', 'Event Proposal': '🎉',
+      'Progress Report': '📈', 'Grant Sanction': '💰', 'Ethics Clearance': '🔒',
+      'Publication Record': '📰', 'Equipment Requisition': '⚙️',
+      'Collaboration Agreement': '🤝',
+      'Letter': '✉️', 'Memo': '📋', 'Report': '📊', 'Form': '📝',
+      'Notice': '📢', 'Certificate': '📜',
+      'Other': '📎'
+    } %}
 
     {% if not grouped %}
     <div class="card" style="text-align:center;padding:48px;color:var(--muted)">
       <div style="font-size:40px">📂</div>
       <div style="margin-top:12px;font-size:14px">No parts added yet.</div>
-      <div style="font-size:12px;margin-top:4px">Use the form to add invoices, bills, or receipts.</div>
+      <div style="font-size:12px;margin-top:4px">Use the form to add sub-parts to this file.</div>
     </div>
     {% endif %}
 
-    {% for ptype in part_types %}
-      {% if grouped.get(ptype) %}
+    {% for ptype, parts_list in grouped.items() %}
       <div class="card">
         <div class="card-header" style="margin-bottom:12px">
           <div class="card-title">
-            {% if ptype == 'Invoice' %}🧾
-            {% elif ptype == 'Bill' %}📄
-            {% elif ptype == 'Receipt' %}🏷️
-            {% else %}📎{% endif %}
+            {{ icons.get(ptype, '📎') }}
             {{ ptype }}s
             <span style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:8px">
-              {{ grouped[ptype]|length }} item(s)
+              {{ parts_list|length }} item(s)
             </span>
           </div>
         </div>
-        {% for part in grouped[ptype] %}
+        {% for part in parts_list %}
         <a href="/part/{{ part.id }}" style="text-decoration:none">
           <div style="
             background:var(--surface2);
@@ -82,34 +99,6 @@
         </a>
         {% endfor %}
       </div>
-      {% endif %}
-    {% endfor %}
-
-    <!-- Any types not in the default list -->
-    {% for ptype, parts in grouped.items() %}
-      {% if ptype not in part_types %}
-      <div class="card">
-        <div class="card-header" style="margin-bottom:12px">
-          <div class="card-title">📎 {{ ptype }}s <span style="font-family:var(--mono);font-size:11px;color:var(--muted);margin-left:8px">{{ parts|length }} item(s)</span></div>
-        </div>
-        {% for part in parts %}
-        <a href="/part/{{ part.id }}" style="text-decoration:none">
-          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;transition:border-color 0.15s"
-               onmouseover="this.style.borderColor='var(--accent)'"
-               onmouseout="this.style.borderColor='var(--border)'">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div style="font-weight:600;font-size:13px;color:var(--text)">{{ part.title }}</div>
-              <span style="font-family:var(--mono);font-size:10px;color:var(--muted)">{{ part.created_date }}</span>
-            </div>
-            {% if part.description %}
-            <div style="font-size:12px;color:var(--muted);margin-top:4px">{{ part.description }}</div>
-            {% endif %}
-            <div style="font-size:11px;color:var(--muted);margin-top:6px">By: {{ part.created_by }}</div>
-          </div>
-        </a>
-        {% endfor %}
-      </div>
-      {% endif %}
     {% endfor %}
 
   </div>
@@ -126,9 +115,83 @@
           <label>PART TYPE</label>
           <select name="part_type" required>
             <option value="">Select type</option>
-            <option value="Invoice">Invoice</option>
-            <option value="Bill">Bill</option>
-            <option value="Receipt">Receipt</option>
+
+            {# ── Finance / Administration ── #}
+            {% if file_info.department in ['Finance', 'Administration'] %}
+              <option value="Invoice">Invoice</option>
+              <option value="Bill">Bill</option>
+              <option value="Receipt">Receipt</option>
+              <option value="Budget Estimate">Budget Estimate</option>
+              <option value="Payment Voucher">Payment Voucher</option>
+              <option value="Purchase Order">Purchase Order</option>
+              <option value="Audit Report">Audit Report</option>
+              <option value="Sanction Letter">Sanction Letter</option>
+
+            {# ── Academic departments (CS, ME, EE, CE, Physics, Math) ── #}
+            {% elif file_info.department in ['Computer Science', 'Mechanical Engineering', 'Electrical Engineering', 'Civil Engineering', 'Physics', 'Mathematics'] %}
+              <option value="Project Proposal">Project Proposal</option>
+              <option value="Lab Report">Lab Report</option>
+              <option value="Research Paper">Research Paper</option>
+              <option value="Assignment">Assignment</option>
+              <option value="Examination Paper">Examination Paper</option>
+              <option value="Grade Sheet">Grade Sheet</option>
+              <option value="Course Outline">Course Outline</option>
+              <option value="Approval Letter">Approval Letter</option>
+              <option value="NOC">NOC</option>
+
+            {# ── Library ── #}
+            {% elif file_info.department == 'Library' %}
+              <option value="Book Request">Book Request</option>
+              <option value="Acquisition List">Acquisition List</option>
+              <option value="Due Notice">Due Notice</option>
+              <option value="Membership Form">Membership Form</option>
+              <option value="Inventory Record">Inventory Record</option>
+              <option value="Subscription Invoice">Subscription Invoice</option>
+
+            {# ── Hostel Office ── #}
+            {% elif file_info.department == 'Hostel Office' %}
+              <option value="Allotment Letter">Allotment Letter</option>
+              <option value="Room Change Request">Room Change Request</option>
+              <option value="Mess Bill">Mess Bill</option>
+              <option value="Complaint Form">Complaint Form</option>
+              <option value="Maintenance Request">Maintenance Request</option>
+              <option value="Fee Receipt">Fee Receipt</option>
+              <option value="Disciplinary Notice">Disciplinary Notice</option>
+
+            {# ── Student Affairs ── #}
+            {% elif file_info.department == 'Student Affairs' %}
+              <option value="Application Form">Application Form</option>
+              <option value="Scholarship Letter">Scholarship Letter</option>
+              <option value="Bonafide Certificate">Bonafide Certificate</option>
+              <option value="Grievance Form">Grievance Form</option>
+              <option value="Event Proposal">Event Proposal</option>
+              <option value="NOC">NOC</option>
+              <option value="Approval Letter">Approval Letter</option>
+
+            {# ── Research ── #}
+            {% elif file_info.department == 'Research' %}
+              <option value="Project Proposal">Project Proposal</option>
+              <option value="Progress Report">Progress Report</option>
+              <option value="Grant Sanction">Grant Sanction</option>
+              <option value="Ethics Clearance">Ethics Clearance</option>
+              <option value="Publication Record">Publication Record</option>
+              <option value="Equipment Requisition">Equipment Requisition</option>
+              <option value="Collaboration Agreement">Collaboration Agreement</option>
+              <option value="Invoice">Invoice</option>
+
+            {# ── Fallback for any other department ── #}
+            {% else %}
+              <option value="Letter">Letter</option>
+              <option value="Memo">Memo</option>
+              <option value="Report">Report</option>
+              <option value="Form">Form</option>
+              <option value="Notice">Notice</option>
+              <option value="Certificate">Certificate</option>
+              <option value="Invoice">Invoice</option>
+              <option value="Receipt">Receipt</option>
+            {% endif %}
+
+            {# Always available ── #}
             <option value="Other">Other</option>
           </select>
         </div>
