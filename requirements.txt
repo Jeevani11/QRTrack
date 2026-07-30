@@ -1,4 +1,15 @@
-flask>=3.0.0
-qrcode[pil]>=7.4.2
-psycopg2-binary>=2.9.9
-gunicorn>=22.0.0
+Introduction to Artificial Intelligence, Machine Learning, and Deep LearningBiological and Artificial NeuronsPerceptron and Multilayer Perceptron (MLP)  Activation Functions: Sigmoid, Tanh, ReLU, Leaky ReLU, 
+Softmax. Forward Propagation, Loss Functions, Gradient Descent Optimization, Backpropagation Algorithm, Challenges in Training Deep Networks
+
+
+Deep Feedforward Networks, Weight Initialization Techniques, Batch Normalization, Regularization Methods: 
+L1 and L2 Regularization, Dropout, Early Stopping, Optimization Algorithms, SGD, Momentum, RMSProp, Adam. Hyperparameter Tuning, Model Evaluation Metrics
+
+
+Convolution Operation, Pooling Techniques, CNN Architectures : LeNet, AlexNet, VGG, GoogLeNet, ResNet. Transfer Learning, Fine-Tuning Pretrained Models
+
+
+Sequential Data Processing, Recurrent Neural Networks (RNNs), Vanishing and Exploding Gradient Problems, Long Short-Term Memory (LSTM), Gated Recurrent Units (GRU), Attention Mechanism
+
+
+Vision Transformers (ViT)
